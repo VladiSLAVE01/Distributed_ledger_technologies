@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Merkle Tree
 
 В проекте представлены основные классы данных, которые используются в блокчейне. 
@@ -174,3 +175,7 @@ npx mocha test/MerkleTree.js
 npx mocha test/Trie.js
 ```  
 
+=======
+# Distributed_ledger_technologies
+Practical assignments on the topic "Distributed Ledger Technologies" will be presented here.
+>>>>>>> f9f6c475c0d026c2e29405493ca45ebeea42dfa4
