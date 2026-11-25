@@ -3,10 +3,8 @@ import { useState } from "react";
 import { getContract, parseUnits, formatUnits, Address } from "viem";
 import { ConnectWalletClient, ConnectPublicClient } from "./client";
 
-// ABI минимального ERC-20 (OpenZeppelin)
 const erc20Abi = [
   {
-    constant: true,
     inputs: [],
     name: "name",
     outputs: [{ name: "", type: "string" }],
@@ -14,7 +12,6 @@ const erc20Abi = [
     type: "function",
   },
   {
-    constant: true,
     inputs: [],
     name: "symbol",
     outputs: [{ name: "", type: "string" }],
@@ -22,7 +19,6 @@ const erc20Abi = [
     type: "function",
   },
   {
-    constant: true,
     inputs: [],
     name: "decimals",
     outputs: [{ name: "", type: "uint8" }],
@@ -30,7 +26,6 @@ const erc20Abi = [
     type: "function",
   },
   {
-    constant: true,
     inputs: [{ name: "account", type: "address" }],
     name: "balanceOf",
     outputs: [{ name: "", type: "uint256" }],
@@ -38,7 +33,6 @@ const erc20Abi = [
     type: "function",
   },
   {
-    constant: false,
     inputs: [
       { name: "to", type: "address" },
       { name: "amount", type: "uint256" },
@@ -50,7 +44,8 @@ const erc20Abi = [
   },
 ] as const;
 
-const CONTRACT_ADDRESS = "0xFfc5A2a66Ab379A803F23cCA61b313431f787d3F" as Address;
+const CONTRACT_ADDRESS =
+  "0xFfc5A2a66Ab379A803F23cCA61b313431f787d3F" as Address;
 
 export default function Erc20Component() {
   const [balance, setBalance] = useState<string>("");
@@ -60,7 +55,10 @@ export default function Erc20Component() {
   const [amount, setAmount] = useState("");
   const [status, setStatus] = useState("");
 
-  const setValue = (setter: any) => (evt: any) => setter(evt.target.value);
+  const setValue =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (evt: React.ChangeEvent<HTMLInputElement>) =>
+      setter(evt.target.value);
 
   async function loadTokenInfo() {
     try {
@@ -85,7 +83,9 @@ export default function Erc20Component() {
       setBalance(formatUnits(bal, dec));
       setStatus(`Загружено: ${sym}, баланс ${formatUnits(bal, dec)}`);
     } catch (error) {
-      setStatus(`Ошибка чтения: ${error instanceof Error ? error.message : String(error)}`);
+      setStatus(
+        `Ошибка чтения: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
   }
 
@@ -107,15 +107,17 @@ export default function Erc20Component() {
       const parsedAmount = parseUnits(amount, decimals);
 
       setStatus("Отправка транзакции...");
-      const hash = await contract.write.transfer([recipient as Address, parsedAmount], {
-        account,
-      });
+      const hash = await contract.write.transfer(
+        [recipient as Address, parsedAmount],
+        { account }
+      );
       setStatus(`Транзакция отправлена: ${hash}`);
 
-      // Обновить баланс после подтверждения (опционально)
       setTimeout(loadTokenInfo, 3000);
     } catch (error) {
-      setStatus(`Ошибка перевода: ${error instanceof Error ? error.message : String(error)}`);
+      setStatus(
+        `Ошибка перевода: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
   }
 
